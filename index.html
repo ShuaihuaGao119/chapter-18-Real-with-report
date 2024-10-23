@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>85-Question Test Bank Quiz Chapter 18</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; }
+        .question { margin-bottom: 20px; }
+        .result { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>84-Question Test Bank Quiz</h1>
+    <form id="quizForm">
+
+       <!-- Quiz Questions Here (same as your original) -->
+
+        <input type="submit" value="Submit Test">
+    </form>
+
+    <div class="result" id="result"></div>
+
+    <script>
+        document.getElementById('quizForm').onsubmit = function(event) {
+            event.preventDefault();  // Prevent form submission
+            
+            let score = 0;
+            let correctAnswers = {
+                q1: "d",
+                q2: "e",
+                q3: "d",
+                q4: "e",
+                q5a: "a",
+                q5b: "b",
+                q6: "d",
+                q7: "e",
+                q8: "c",
+                q9: "c",
+                q10: "c",
+                q11: "c",
+                q12: "b",
+                q13: "a",
+                q14: "c",
+                q15: "b",
+                q16: "e",
+                q17: "a",
+                q18: "a",
+                q19: "e",
+                q20: "c",
+                //... (rest of the questions)
+                q85: "d"
+            };
+
+            // Evaluate the form inputs
+            let form = new FormData(this);
+            for (let question in correctAnswers) {
+                if (form.get(question) === correctAnswers[question]) {
+                    score++;
+                }
+            }
+
+            // Show the results
+            let totalQuestions = Object.keys(correctAnswers).length;
+            let resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `You scored ${score} out of ${totalQuestions}.`;
+
+            // Optionally, display correct answers here
+            resultDiv.innerHTML += '<br><br>Correct Answers:<br>';
+            for (let question in correctAnswers) {
+                resultDiv.innerHTML += `${question}: ${correctAnswers[question]}<br>`;
+            }
+
+            // Send notification to a webhook (replace 'your-webhook-url' with actual URL)
+            const data = {
+                score: score,
+                totalQuestions: totalQuestions,
+                userAnswers: Object.fromEntries(form.entries()), // Collect all form data
+                timestamp: new Date().toISOString()
+            };
+
+            fetch('https://your-webhook-url.com/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Notification sent successfully:', data);
+            })
+            .catch((error) => {
+                console.error('Error sending notification:', error);
+            });
+        }
+    </script>
+</body>
+</html>
